@@ -1,0 +1,8 @@
+.gitignore
+Makefile.PL
+MANIFEST
+README.md
+t/00_load.t
+t/01_basic.t
+t/02_pod.t
+lib/Dancer/Session/Redis.pm
