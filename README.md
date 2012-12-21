@@ -24,6 +24,7 @@ SYNOPSYS
     session: 'Redis'
     redis_session:
         server: 'redi.example.com:6379'
+        password: 'QmG_kZECJAvAcDaWqqSqoNLUka5v3unMe_8sqYMh6ST'
         database: 1
         expire: 3600
         debug: 0
@@ -33,6 +34,7 @@ SYNOPSYS
     setting session       => 'Redis';
     setting redis_session => {
         server   => 'redi.example.com:6379',
+        password => 'QmG_kZECJAvAcDaWqqSqoNLUka5v3unMe_8sqYMh6ST',
         database => 1,
         expire   => 3600,
         debug    => 0,
@@ -63,6 +65,11 @@ In order to use this session engine, you have to set up a few settings (in the a
     *   `server`
 
         Hostname and port of redis-server instance which will be used to store session data. This one is **required**.
+
+    *   `password`
+
+        Password string for redis-server's AUTH command to processing any other commands. Optional.
+        Check the redis-server manual for directive **requirepass** if you would to use redis internal authentication.
 
     *   `database`
 

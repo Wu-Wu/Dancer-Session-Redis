@@ -9,7 +9,7 @@ use Dancer::Config 'setting';
 use Storable ();
 use Carp ();
 
-our $VERSION = '0.1.8';
+our $VERSION = '0.1.9';
 
 my $_redis;
 my %options = ();
@@ -28,6 +28,7 @@ sub init {
                 'expire'   => $opts->{'expire'}   || 900,
                 'debug'    => $opts->{'debug'}    || 0,
                 'ping'     => $opts->{'ping'}     || 5,
+                'password' => $opts->{'password'} || undef,
             );
         } else {
             Carp::croak "Settings 'redis_session' must be a hash reference!";
@@ -62,7 +63,15 @@ sub _redis_watchdog {
 #
 # connect to redis server and return handle (or croaks)
 sub _redis_get_handle {
-    $_redis->{handle} = Redis->new(server => $options{'server'}, debug => $options{'debug'});
+
+    my %params = (
+        server => $options{'server'},
+        debug  => $options{'debug'},
+    );
+
+    $params{password} = $options{'password'} if $options{'password'};
+
+    $_redis->{handle} = Redis->new(%params);
 
     $_redis->{lastcheck} = time if $_redis->{handle} && $_redis->{handle}->ping;
 
@@ -127,6 +136,7 @@ Dancer::Session::Redis - Redis backend for Dancer Session Engine
     session: 'Redis'
     redis_session:
         server: 'redi.example.com:6379'
+        password: 'QmG_kZECJAvAcDaWqqSqoNLUka5v3unMe_8sqYMh6ST'
         database: 1
         expire: 3600
         debug: 0
@@ -136,6 +146,7 @@ Dancer::Session::Redis - Redis backend for Dancer Session Engine
     setting session       => 'Redis';
     setting redis_session => {
         server   => 'redi.example.com:6379',
+        password => 'QmG_kZECJAvAcDaWqqSqoNLUka5v3unMe_8sqYMh6ST',
         database => 1,
         expire   => 3600,
         debug    => 0,
@@ -166,6 +177,11 @@ Settings for backend.
 =item I<server>
 
 Hostname and port of redis-server instance which will be used to store session data. This one is B<required>.
+
+=item I<password>
+
+Password string for redis-server's AUTH command to processing any other commands. Optional. Check the redis-server
+manual for directive I<requirepass> if you would to use redis internal authentication.
 
 =item I<database>
 
@@ -226,7 +242,7 @@ L<redis.io|http://redis.io>
 
 =head1 AUTHOR
 
-Anton Gerasimov, E<lt>me {at} zyxmasta.comE<gt>
+Anton Gerasimov, E<lt>chim@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
