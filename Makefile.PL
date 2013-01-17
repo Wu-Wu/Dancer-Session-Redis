@@ -27,6 +27,7 @@ my %options = (
     },
     'BUILD_REQUIRES' => {
         'Test::More' => '0.98',
+        'Test::Pod'  => '1.22',
     },
     'MIN_PERL_VERSION' => '5.10.0',
     'test' => {

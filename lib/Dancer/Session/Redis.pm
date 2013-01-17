@@ -157,7 +157,6 @@ version 0.20
         ping: 5
 
     # or in the Dancer application:
-    setting session       => 'Redis';
     setting redis_session => {
         server   => 'redi.example.com:6379',
         password => 'QmG_kZECJAvAcDaWqqSqoNLUka5v3unMe_8sqYMh6ST',
@@ -166,11 +165,13 @@ version 0.20
         debug    => 0,
         ping     => 5,
     };
+    setting session => 'Redis';
 
 =head1 DESCRIPTION
 
 This module is a Redis backend for the session engine of Dancer application. This module is a descendant
-of L<Dancer::Session::Abstract>.
+of L<Dancer::Session::Abstract>. A simple demo apllication might be found in the C<eg/> directory of this
+distribution.
 
 =head1 CONFIGURATION
 

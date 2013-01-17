@@ -19,7 +19,6 @@ To install this module type the following:
     make test
     make install
 
-
 # SYNOPSIS
 
     # in the Dancer config.yml:
@@ -33,7 +32,6 @@ To install this module type the following:
         ping: 5
 
     # or in the Dancer application:
-    setting session       => 'Redis';
     setting redis_session => {
         server   => 'redi.example.com:6379',
         password => 'QmG_kZECJAvAcDaWqqSqoNLUka5v3unMe_8sqYMh6ST',
@@ -42,11 +40,13 @@ To install this module type the following:
         debug    => 0,
         ping     => 5,
     };
+    setting session => 'Redis';
 
 # DESCRIPTION
 
 This module is a Redis backend for the session engine of Dancer application. This module is a descendant
-of [Dancer::Session::Abstract](http://search.cpan.org/perldoc?Dancer::Session::Abstract).
+of [Dancer::Session::Abstract](http://search.cpan.org/perldoc?Dancer::Session::Abstract). A simple demo apllication might be found in the `eg/` directory of this
+distribution.
 
 # CONFIGURATION
 
