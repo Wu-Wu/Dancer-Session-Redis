@@ -3,6 +3,7 @@ MANIFEST
 LICENSE
 README
 README.md
+eg/app.pl
 t/00_load.t
 t/01_basic.t
 t/02_pod.t
