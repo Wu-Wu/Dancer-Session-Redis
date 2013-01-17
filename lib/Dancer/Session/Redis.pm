@@ -24,6 +24,7 @@ sub init {
         if (ref $opts and ref $opts eq 'HASH' ) {
             %options = (
                 'server'   => $opts->{'server'}   || undef,
+                'sock'     => $opts->{'sock'}     || undef,
                 'database' => $opts->{'database'} || 0,
                 'expire'   => $opts->{'expire'}   || 900,
                 'debug'    => $opts->{'debug'}    || 0,
@@ -37,7 +38,9 @@ sub init {
         Carp::croak "Settings 'redis_session' is not defined!";
     }
 
-    Carp::croak "Parameter 'redis_session.server' must be defined" unless defined $options{'server'};
+    unless (defined $options{'server'} || defined $options{'sock'}) {
+        Carp::croak "Parameter 'redis_session.server' must be defined";
+    }
 
     _redis_watchdog();
 }
@@ -65,9 +68,14 @@ sub _redis_watchdog {
 sub _redis_get_handle {
 
     my %params = (
-        server => $options{'server'},
         debug  => $options{'debug'},
     );
+
+	if (defined $options{'sock'}) {
+		$params{'sock'} = $options{'sock'};
+	} else {
+		$params{'server'} = $options{'server'};
+	}
 
     $params{password} = $options{'password'} if $options{'password'};
 
@@ -176,7 +184,11 @@ Settings for backend.
 
 =item I<server>
 
-Hostname and port of redis-server instance which will be used to store session data. This one is B<required>.
+Hostname and port of redis-server instance which will be used to store session data. This one is B<required> unless I<sock> is defined.
+
+=item I<sock>
+
+unix socket path of the redis-server instance which will be used to store session data.
 
 =item I<password>
 
