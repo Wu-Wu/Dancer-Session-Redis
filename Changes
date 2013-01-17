@@ -1,0 +1,7 @@
+Revision history for Perl extension Dancer::Session::Redis.
+
+0.1.9  Fri Dec 21 07:42:20 2012
+    - added support for authenticated sessions
+
+0.1.8  Fri Dec 7 12:31:19 2012
+	- original version
