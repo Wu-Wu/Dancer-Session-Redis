@@ -1,14 +1,16 @@
-Dancer-Session-Redis
-====================
+# Dancer::Session::Redis
 
-Redis backend for Dancer Session Engine.
+Redis backend for Dancer Session Engine
 
 [![Build Status](https://travis-ci.org/Wu-Wu/Dancer-Session-Redis.png)](https://travis-ci.org/Wu-Wu/Dancer-Session-Redis)
 
 - - - - - - - - - -
 
-INSTALLATION
-------------
+# VERSION
+
+version 0.20
+
+# INSTALLATION
 
 To install this module type the following:
 
@@ -17,13 +19,13 @@ To install this module type the following:
     make test
     make install
 
-SYNOPSYS
---------
+
+# SYNOPSIS
 
     # in the Dancer config.yml:
     session: 'Redis'
     redis_session:
-        server: 'redi.example.com:6379'
+        sock: '/var/run/redis.sock'
         password: 'QmG_kZECJAvAcDaWqqSqoNLUka5v3unMe_8sqYMh6ST'
         database: 1
         expire: 3600
@@ -41,57 +43,82 @@ SYNOPSYS
         ping     => 5,
     };
 
-
-DESCRIPTION
------------
+# DESCRIPTION
 
 This module is a Redis backend for the session engine of Dancer application. This module is a descendant
-of [Dancer::Session](http://search.cpan.org/perldoc?Dancer::Session)
+of [Dancer::Session::Abstract](http://search.cpan.org/perldoc?Dancer::Session::Abstract).
 
-
-CONFIGURATION
--------------
+# CONFIGURATION
 
 In order to use this session engine, you have to set up a few settings (in the app or app's configuration file).
 
-*   **session**
+- session
 
-    Set the vaue to `Redis`. Required parameter.
+    Set the vaue __Redis__. Required parameter.
 
-*   **redis_session**
+- redis\_session
 
     Settings for backend.
 
-    *   `server`
+    - _server_
 
-        Hostname and port of redis-server instance which will be used to store session data. This one is **required**.
+        Hostname and port of the redis-server instance which will be used to store session data. This one is __required__ unless _sock_ is defined.
 
-    *   `password`
+    - _sock_
 
-        Password string for redis-server's AUTH command to processing any other commands. Optional.
-        Check the redis-server manual for directive **requirepass** if you would to use redis internal authentication.
+        unix socket path of the redis-server instance which will be used to store session data.
 
-    *   `database`
+    - _password_
 
-        Database # to store session data. Optional. Default value is 0.
+        Password string for redis-server's AUTH command to processing any other commands. Optional. Check the redis-server
+        manual for directive _requirepass_ if you would to use redis internal authentication.
 
-    *   `expire`
+    - _database_
+
+        Database \# to store session data. Optional. Default value is 0.
+
+    - _expire_
 
         Session TTL. Optional. Default value is 900 (seconds).
 
-    *   `ping`
+    - _ping_
 
         Time (in seconds) to check connection alive and re-establish in case of closed connection. Optional. Default value
         is 5 (seconds). Redis server close connection after a client is idle for seconds but server instance might be
         configured to not close client's connection. Check the redis server manual.
 
-    *   `debug`
+    - _debug_
 
         Enables debug information to STDERR, including all interactions with the redis-server. Optional. Default value is 0.
 
+# METHODS
 
-SEE ALSO
---------
+## init()
+
+Validate settings and creates the initial connection to redis-server.
+
+## create()
+
+Creates a new object, runs `flush` and returns the object.
+
+## flush()
+
+Writes the session information to the Redis database.
+
+## retrieve()
+
+Retrieves session information from the Redis database.
+
+## destroy()
+
+Deletes session information from the Redis database.
+
+# BUGS
+
+Please report any bugs or feature requests through the web interface at
+[https://github.com/Wu-Wu/Dancer-Session-Redis/issues](https://github.com/Wu-Wu/Dancer-Session-Redis/issues)
+
+# SEE ALSO
 
 [Dancer](http://search.cpan.org/perldoc?Dancer)
 
@@ -101,16 +128,15 @@ SEE ALSO
 
 [Redis](http://search.cpan.org/perldoc?Redis)
 
-[http://redis.io](http://redis.io/)
+[redis.io](http://redis.io)
 
-COPYRIGHT AND LICENCE
----------------------
+# AUTHOR
+
+Anton Gerasimov, <chim@cpan.org>
+
+# COPYRIGHT AND LICENSE
 
 Copyright (C) 2012 by Anton Gerasimov
 
-This program is free software; you can redistribute it and/or modify it
-under the terms of either: the GNU General Public License as published
-by the Free Software Foundation; or the Artistic License.
-
-See http://dev.perl.org/licenses/ for more information.
-
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.

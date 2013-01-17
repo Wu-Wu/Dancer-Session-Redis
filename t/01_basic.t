@@ -20,14 +20,13 @@ like $@, qr/Settings 'redis_session' must be a hash reference/,
 # incomplete settings
 setting redis_session => {};
 eval { Dancer::Session::Redis->create };
-like $@, qr/Parameter 'redis_session.server' must be defined/,
-    "Parameter 'redis_session.server' is not defined";
+like $@, qr/Parameter 'redis_session.server' or 'redis_session.sock' have to be defined/,
+    "Parameter 'redis_session.server' or 'redis_session.sock' is not defined";
 
 # complete settings
 setting redis_session => {
     server => $default_server,
 };
-
 
 SKIP: {
     eval { Redis->new(server => $default_server, debug => 0) };

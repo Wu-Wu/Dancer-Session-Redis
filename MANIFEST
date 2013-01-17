@@ -1,5 +1,6 @@
 Makefile.PL
 MANIFEST
+README
 README.md
 t/00_load.t
 t/01_basic.t

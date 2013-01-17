@@ -9,7 +9,7 @@ use Dancer::Config 'setting';
 use Storable ();
 use Carp ();
 
-our $VERSION = '0.1.9';
+our $VERSION = '0.20';
 
 my $_redis;
 my %options = ();
@@ -39,7 +39,7 @@ sub init {
     }
 
     unless (defined $options{'server'} || defined $options{'sock'}) {
-        Carp::croak "Parameter 'redis_session.server' must be defined";
+        Carp::croak "Parameter 'redis_session.server' or 'redis_session.sock' have to be defined";
     }
 
     _redis_watchdog();
@@ -134,16 +134,22 @@ sub flush {
 1;
 __END__
 
+=pod
+
 =head1 NAME
 
 Dancer::Session::Redis - Redis backend for Dancer Session Engine
+
+=head1 VERSION
+
+version 0.20
 
 =head1 SYNOPSIS
 
     # in the Dancer config.yml:
     session: 'Redis'
     redis_session:
-        server: 'redi.example.com:6379'
+        sock: '/var/run/redis.sock'
         password: 'QmG_kZECJAvAcDaWqqSqoNLUka5v3unMe_8sqYMh6ST'
         database: 1
         expire: 3600
@@ -184,7 +190,7 @@ Settings for backend.
 
 =item I<server>
 
-Hostname and port of redis-server instance which will be used to store session data. This one is B<required> unless I<sock> is defined.
+Hostname and port of the redis-server instance which will be used to store session data. This one is B<required> unless I<sock> is defined.
 
 =item I<sock>
 
@@ -239,6 +245,11 @@ Retrieves session information from the Redis database.
 
 Deletes session information from the Redis database.
 
+=head1 BUGS
+
+Please report any bugs or feature requests through the web interface at
+L<https://github.com/Wu-Wu/Dancer-Session-Redis/issues>
+
 =head1 SEE ALSO
 
 L<Dancer>
@@ -251,7 +262,6 @@ L<Redis>
 
 L<redis.io|http://redis.io>
 
-
 =head1 AUTHOR
 
 Anton Gerasimov, E<lt>chim@cpan.orgE<gt>
@@ -260,11 +270,7 @@ Anton Gerasimov, E<lt>chim@cpan.orgE<gt>
 
 Copyright (C) 2012 by Anton Gerasimov
 
-This program is free software; you can redistribute it and/or modify it
-under the terms of either: the GNU General Public License as published
-by the Free Software Foundation; or the Artistic License.
-
-See http://dev.perl.org/licenses/ for more information.
-
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
 
 =cut
