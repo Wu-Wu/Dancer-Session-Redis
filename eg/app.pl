@@ -23,7 +23,6 @@ set redis_session => {
     database => 3,
     expire   => 3600,
     debug    => 0,
-    ping     => 5,
 };
 set session       => 'Redis';
 set session_name  => 'eg_session_id'; # session's cookie name
