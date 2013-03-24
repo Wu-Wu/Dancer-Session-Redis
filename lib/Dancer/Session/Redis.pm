@@ -25,72 +25,30 @@ sub init {
     if (my $opts = setting('redis_session') ) {
         if (ref $opts and ref $opts eq 'HASH' ) {
             %options = (
-                'server'   => $opts->{'server'}   || undef,
-                'sock'     => $opts->{'sock'}     || undef,
-                'database' => $opts->{'database'} || 0,
-                'expire'   => $opts->{'expire'}   || 900,
-                'debug'    => $opts->{'debug'}    || 0,
-                'ping'     => $opts->{'ping'}     || 5,
-                'password' => $opts->{'password'} || undef,
+                server   => $opts->{server}   || undef,
+                sock     => $opts->{sock}     || undef,
+                database => $opts->{database} || 0,
+                expire   => $opts->{expire}   || 900,
+                debug    => $opts->{debug}    || 0,
+                password => $opts->{password} || undef,
             );
-        } else {
+        }
+        else {
             Carp::croak "Settings 'redis_session' must be a hash reference!";
         }
-    } else {
+    }
+    else {
         Carp::croak "Settings 'redis_session' is not defined!";
     }
 
-    unless (defined $options{'server'} || defined $options{'sock'}) {
+    unless (defined $options{server} || defined $options{sock}) {
         Carp::croak "Parameter 'redis_session.server' or 'redis_session.sock' have to be defined";
     }
 
-    _redis_watchdog();
+    # get radis handle
+    $self->redis;
 }
 
-#
-# check redis handle and re-establish connection
-sub _redis_watchdog {
-    if ($_redis->{handle}) {
-        if (time - $_redis->{lastcheck} > $options{'ping'}) {
-            if ($_redis->{handle}->ping) {
-                $_redis->{lastcheck} = time;
-                return $_redis->{handle};
-            } else {
-                Carp::carp "Lost redis connection. Reconnecting...";
-                return _redis_get_handle();
-            }
-        }
-    } else {
-        return _redis_get_handle();
-    }
-}
-
-#
-# connect to redis server and return handle (or croaks)
-sub _redis_get_handle {
-
-    my %params = (
-        debug  => $options{'debug'},
-    );
-
-	if (defined $options{'sock'}) {
-		$params{'sock'} = $options{'sock'};
-	} else {
-		$params{'server'} = $options{'server'};
-	}
-
-    $params{password} = $options{'password'} if $options{'password'};
-
-    $_redis->{handle} = Redis->new(%params);
-
-    $_redis->{lastcheck} = time if $_redis->{handle} && $_redis->{handle}->ping;
-
-    $_redis->{handle} and return $_redis->{handle};
-
-    Carp::croak "Unable connect to redis..." unless $_redis->{handle};
-}
-
-#
 # create a new session
 sub create {
     my ($class) = @_;
@@ -98,39 +56,62 @@ sub create {
     $class->new->flush;
 }
 
-#
 # fetch the session object by id
 sub retrieve($$) {
     my ($class, $id) = @_;
 
-    _redis_watchdog();
-    $_redis->{handle}->select($options{'database'});
-    $_redis->{handle}->expire($id => $options{'expire'});
+    my $self = $class->new;
+    $self->redis->select($options{database});
+    $self->redis->expire($id => $options{expire});
 
-    Storable::thaw($_redis->{handle}->get($id));
+    Storable::thaw($self->redis->get($id));
 }
 
-#
 # delete session
 sub destroy {
     my ($self) = @_;
 
-    _redis_watchdog();
-    $_redis->{handle}->select($options{'database'});
-    $_redis->{handle}->del($self->id);
+    $self->redis->select($options{database});
+    $self->redis->del($self->id);
 }
 
-#
 # flush session
 sub flush {
     my ($self) = @_;
 
-    _redis_watchdog();
-    $_redis->{handle}->select($options{'database'});
-    $_redis->{handle}->set($self->id => Storable::freeze($self));
-    $_redis->{handle}->expire($self->id => $options{'expire'});
+    $self->redis->select($options{database});
+    $self->redis->set($self->id => Storable::freeze($self));
+    $self->redis->expire($self->id => $options{expire});
 
     $self;
+}
+
+# get redis handle
+sub redis {
+    my ($self) = @_;
+
+    if (!$_redis || !$_redis->ping) {
+        my %params = (
+            debug     => $options{debug},
+            reconnect => 10,
+            every     => 100,
+        );
+
+        if (defined $options{sock}) {
+            $params{sock} = $options{sock};
+        }
+        else {
+            $params{server} = $options{server};
+        }
+
+        $params{password} = $options{password} if $options{password};
+
+        $_redis = Redis->new(%params);
+    }
+
+    $_redis and return $_redis;
+
+    Carp::croak "Unable connect to redis-server...";
 }
 
 1; # End of Dancer::Session::Redis
@@ -149,7 +130,6 @@ __END__
         database: 1
         expire: 3600
         debug: 0
-        ping: 5
 
     # or in the Dancer application:
     setting redis_session => {
@@ -158,7 +138,6 @@ __END__
         database => 1,
         expire   => 3600,
         debug    => 0,
-        ping     => 5,
     };
     setting session => 'Redis';
 
@@ -201,12 +180,6 @@ Database # to store session data. Optional. Default value is 0.
 
 Session TTL. Optional. Default value is 900 (seconds).
 
-=head3 ping
-
-Time (in seconds) to check connection alive and re-establish in case of closed connection. Optional. Default value
-is 5 (seconds). Redis server close connection after a client is idle for seconds but server instance might be
-configured to not close client's connection. Check the redis server manual.
-
 =head3 debug
 
 Enables debug information to STDERR, including all interactions with the redis-server. Optional. Default value is 0.
@@ -216,6 +189,10 @@ Enables debug information to STDERR, including all interactions with the redis-s
 =head2 init
 
 Validate settings and creates the initial connection to redis-server.
+
+=head2 redis
+
+Returns connection handle to the redis instance. Also establish new connection in case of C<dead> handle.
 
 =head2 create
 

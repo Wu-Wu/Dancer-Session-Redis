@@ -18,7 +18,6 @@ version 0.21
         database: 1
         expire: 3600
         debug: 0
-        ping: 5
 
     # or in the Dancer application:
     setting redis_session => {
@@ -27,7 +26,6 @@ version 0.21
         database => 1,
         expire   => 3600,
         debug    => 0,
-        ping     => 5,
     };
     setting session => 'Redis';
 
@@ -70,12 +68,6 @@ Database # to store session data. Optional. Default value is 0.
 
 Session TTL. Optional. Default value is 900 (seconds).
 
-=head3 ping
-
-Time (in seconds) to check connection alive and re-establish in case of closed connection. Optional. Default value
-is 5 (seconds). Redis server close connection after a client is idle for seconds but server instance might be
-configured to not close client's connection. Check the redis server manual.
-
 =head3 debug
 
 Enables debug information to STDERR, including all interactions with the redis-server. Optional. Default value is 0.
@@ -85,6 +77,10 @@ Enables debug information to STDERR, including all interactions with the redis-s
 =head2 init
 
 Validate settings and creates the initial connection to redis-server.
+
+=head2 redis
+
+Returns connection handle to the redis instance. Also establish new connection in case of C<dead> handle.
 
 =head2 create
 
