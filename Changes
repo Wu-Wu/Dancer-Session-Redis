@@ -1,6 +1,8 @@
 Revision history for Perl extension Dancer::Session::Redis.
 
 {{$NEXT}}
+    - refactored connection establishing to redis server
+    - updated and added some *.t
     - dzillify distribution
 
 0.20  Thu Jan 17 16:37:18 2013
