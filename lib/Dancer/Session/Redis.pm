@@ -34,15 +34,15 @@ sub init {
             );
         }
         else {
-            Carp::croak "Settings 'redis_session' must be a hash reference!";
+            Carp::croak 'Settings redis_session must be a hash reference!';
         }
     }
     else {
-        Carp::croak "Settings 'redis_session' is not defined!";
+        Carp::croak 'Settings redis_session is not defined!';
     }
 
     unless (defined $options{server} || defined $options{sock}) {
-        Carp::croak "Parameter 'redis_session.server' or 'redis_session.sock' have to be defined";
+        Carp::croak 'Settings redis_session should include either server or sock parameter!';
     }
 
     # get radis handle
