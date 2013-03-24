@@ -1,15 +1,17 @@
 package Dancer::Session::Redis;
 
 # ABSTRACT: Redis backend for Dancer Session Engine
+
 use strict;
 use warnings;
 use parent 'Dancer::Session::Abstract';
-use Redis;
+use Redis 1.955;
 use Dancer::Config 'setting';
 use Storable ();
 use Carp ();
 
-our $VERSION = '0.20';
+# VERSION
+# AUTHORITY
 
 my $_redis;
 my %options = ();
@@ -131,18 +133,11 @@ sub flush {
     $self;
 }
 
-1;
+1; # End of Dancer::Session::Redis
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Dancer::Session::Redis - Redis backend for Dancer Session Engine
-
-=head1 VERSION
-
-version 0.20
 
 =head1 SYNOPSIS
 
@@ -262,16 +257,5 @@ L<Storable>
 L<Redis>
 
 L<redis.io|http://redis.io>
-
-=head1 AUTHOR
-
-Anton Gerasimov, E<lt>chim@cpan.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright (C) 2012 by Anton Gerasimov
-
-This library is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
 
 =cut

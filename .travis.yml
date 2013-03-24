@@ -9,9 +9,11 @@ perl:
 services:
     - redis-server
 
-before_script:
-    - cpanm Test::Pod --notest
+before_install:
+    - "cpanm -q -n Dist::Zilla::PluginBundle::Author::CHIM"
+
+install:
+    - "dzil authordeps | xargs cpanm -q -n && dzil listdeps | xargs cpanm -q -n"
 
 script:
-    - perl Makefile.PL
-    - make test
+    - "dzil test --release"

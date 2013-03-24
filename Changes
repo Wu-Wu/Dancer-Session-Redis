@@ -1,5 +1,8 @@
 Revision history for Perl extension Dancer::Session::Redis.
 
+{{$NEXT}}
+    - dzillify distribution
+
 0.20  Thu Jan 17 16:37:18 2013
     - added example of usage
     - added support unix socket configurations (GH#2) [thanks to c0decafe!]
