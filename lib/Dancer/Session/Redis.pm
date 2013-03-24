@@ -172,72 +172,64 @@ distribution.
 
 In order to use this session engine, you have to set up a few settings (in the app or app's configuration file).
 
-=over
-
-=item * session
+=head2 session
 
 Set the vaue B<Redis>. Required parameter.
 
-=item * redis_session
+=head2 redis_session
 
 Settings for backend.
 
-=over
-
-=item I<server>
+=head3 server
 
 Hostname and port of the redis-server instance which will be used to store session data. This one is B<required> unless I<sock> is defined.
 
-=item I<sock>
+=head3 sock
 
 unix socket path of the redis-server instance which will be used to store session data.
 
-=item I<password>
+=head3 password
 
 Password string for redis-server's AUTH command to processing any other commands. Optional. Check the redis-server
 manual for directive I<requirepass> if you would to use redis internal authentication.
 
-=item I<database>
+=head3 database
 
 Database # to store session data. Optional. Default value is 0.
 
-=item I<expire>
+=head3 expire
 
 Session TTL. Optional. Default value is 900 (seconds).
 
-=item I<ping>
+=head3 ping
 
 Time (in seconds) to check connection alive and re-establish in case of closed connection. Optional. Default value
 is 5 (seconds). Redis server close connection after a client is idle for seconds but server instance might be
 configured to not close client's connection. Check the redis server manual.
 
-=item I<debug>
+=head3 debug
 
 Enables debug information to STDERR, including all interactions with the redis-server. Optional. Default value is 0.
 
-=back
-
-=back
-
 =head1 METHODS
 
-=head2 init()
+=head2 init
 
 Validate settings and creates the initial connection to redis-server.
 
-=head2 create()
+=head2 create
 
 Creates a new object, runs C<flush> and returns the object.
 
-=head2 flush()
+=head2 flush
 
 Writes the session information to the Redis database.
 
-=head2 retrieve()
+=head2 retrieve
 
 Retrieves session information from the Redis database.
 
-=head2 destroy()
+=head2 destroy
 
 Deletes session information from the Redis database.
 
