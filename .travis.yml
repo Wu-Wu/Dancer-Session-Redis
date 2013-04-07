@@ -13,7 +13,7 @@ before_install:
     - "cpanm -q -n Dist::Zilla::PluginBundle::Author::CHIM"
 
 install:
-    - "dzil authordeps | xargs cpanm -q -n && dzil listdeps | xargs cpanm -q -n"
+    - "dzil authordeps --missing | xargs cpanm -q -n && dzil listdeps --missing | xargs cpanm -q -n"
 
 script:
-    - "dzil test --release"
+    - "TRAVIS_CI_ORG_BUILD=1 dzil test --release"
