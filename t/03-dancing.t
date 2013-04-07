@@ -26,9 +26,9 @@ my @samples = (
 );
 
 while (my($route, $content) = splice(@samples, 0, 2)) {
-    route_exists        $route,           "Route handler is defined for GET $route";
-    response_status_is  $route, 200,      "Response for GET $route is 200";
-    response_content_is $route, $content, "Response content for GET $route looks good";
+    my $resp = dancer_response GET => $route;
+    is $resp->{status},  200,      "Response for GET $route is 200";
+    is $resp->{content}, $content, "Response content for GET $route looks good";
 }
 
 my $values = [];
