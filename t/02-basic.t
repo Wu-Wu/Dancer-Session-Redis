@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 use Test::More;
+use Test::Exception;
 use Dancer::Config 'setting';
 use Dancer::Session::Redis;
 
@@ -16,9 +17,8 @@ my $redis_avail = eval { Redis->new(server => $default_server, debug => 0) };
 plan skip_all => "Redis-server needs to be running on '$default_server' for tests" unless $redis_avail;
 
 my $session;
-eval { $session = Dancer::Session::Redis->create };
+lives_ok { $session = Dancer::Session::Redis->create } 'Session engine created okay';
 
-is      $@,       '',                       'Session engine created okay';
 isa_ok  $session, 'Dancer::Session::Redis', 'Engine was blessed correctly';
 
 my $sid = $session->id;
