@@ -1,6 +1,8 @@
 Revision history for Perl extension Dancer::Session::Redis.
 
 {{$NEXT}}
+
+0.22    Sun Apr 7 11:20:18 2013 +0000
     - start using Test::Exception in *.t
     - set minimum version of perl to 5.8.9
 
